@@ -3,9 +3,9 @@ using LorentzVectorHEP
 using CairoMakie
 
 # Get the CMS OpenData file from CERN EOS
-file = "root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MuonEG/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
+#file = "root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MuonEG/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
 # Alternatively, use a local file path:
-#file = "/Users/mato/Downloads/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
+file = "/data/cms/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
 
 tfile = ROOTFile(file)
 events = LazyTree(tfile, "Events",  Regex("Muon.*"));
