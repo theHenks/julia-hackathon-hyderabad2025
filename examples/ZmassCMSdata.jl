@@ -1,0 +1,25 @@
+using UnROOT
+using LorentzVectorHEP
+using Plots
+
+# Get the CMS OpenData file from CERN EOS
+file = "root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MuonEG/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
+# Alternatively, use a local file path:
+#file = "/Users/mato/Downloads/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
+
+tfile = ROOTFile(file)
+events = LazyTree(tfile, "Events",  Regex("Muon.*"));
+
+masses = Float32[]
+for evt in events
+    evt.nMuon == 2 || continue                  # exactly two muons
+    sum(evt.Muon_charge) == 0 || continue       # opposite sign
+    all(>(10.), evt.Muon_pt) || continue        # pT > 10 GeV
+    muons = LorentzVectorCyl.(evt.Muon_pt, evt.Muon_eta, evt.Muon_phi, evt.Muon_mass)
+    mass = fast_mass(muons[1], muons[2]) 
+    (60.0 < mass < 120.0) || continue           # Z mass window
+    push!(masses, mass)
+end
+
+histogram(masses, bins=50, xlabel="Dimuon Mass [GeV]", ylabel="Events", title="Dimuon Invariant Mass Spectrum")
+savefig("dimuon_mass_spectrum.png")
