@@ -1,6 +1,6 @@
 using UnROOT
 using LorentzVectorHEP
-using Plots
+using CairoMakie
 
 # Get the CMS OpenData file from CERN EOS
 file = "root://eospublic.cern.ch//eos/opendata/cms/Run2016H/MuonEG/NANOAOD/UL2016_MiniAODv2_NanoAODv9-v1/130000/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
@@ -21,5 +21,6 @@ for evt in events
     push!(masses, mass)
 end
 
-histogram(masses, bins=50, xlabel="Dimuon Mass [GeV]", ylabel="Events", title="Dimuon Invariant Mass Spectrum")
-savefig("dimuon_mass_spectrum.png")
+fig = Figure(size=(600, 400))
+hist(fig[1,1], masses, bins=100, axis = (xlabel="Dimuon Mass [GeV]", ylabel="Events", title="Dimuon Invariant Mass Spectrum"))
+fig
