@@ -7,9 +7,11 @@ using CairoMakie
 # Alternatively, use a local file path:
 file = "/data/cms/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
 
-tfile = ROOTFile(file)
+# Open the ROOT file and access the Events tree selecting all branches matching "Muon.*"
+tfile = ROOTFile(file)         
 events = LazyTree(tfile, "Events",  Regex("Muon.*"));
 
+# Loop over events and select dimuon candidates with specific criteria 
 masses = Float32[]
 for evt in events
     evt.nMuon == 2 || continue                  # exactly two muons
@@ -21,6 +23,7 @@ for evt in events
     push!(masses, mass)
 end
 
+# plot the dimuon mass spectrum
 fig = Figure(size=(600, 400))
 hist(fig[1,1], masses, bins=100, axis = (xlabel="Dimuon Mass [GeV]", ylabel="Events", title="Dimuon Invariant Mass Spectrum"))
 fig
