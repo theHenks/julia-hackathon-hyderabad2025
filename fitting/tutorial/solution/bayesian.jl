@@ -1,3 +1,8 @@
+#################################################################
+# Proposed partial solution for frequentist fit in tutorial part 
+#################################################################
+
+
 using UnROOT
 using FHist, StatsBase, Distributions, IntervalSets, LinearAlgebra
 using Optimization, OptimizationLBFGSB, OptimizationOptimJL, QuadGK, ForwardDiff
@@ -88,22 +93,3 @@ par_cov_bw = cov(unshaped_samples_bw)
 
 using LazyReports
 lazyreport(samples_bw)
-
-# let x_fit = first(fit_range):0.01:last(fit_range)
-#     fig = Figure(size=(600, 400))
-#     ax = Axis(fig[1, 1]; 
-#                 limits=((first(h.binedges[1]), last(h.binedges[1])), (-100, maximum(h.bincounts)*1.3)),
-#                 xlabel=L"m_{Z} \; (\mathrm{GeV}/c^{2})", 
-#                 ylabel=latexstring("Events / $bin_width \$\\mathrm{GeV}/c^{2}\$"),
-#                 ylabelsize=18,
-#                 xlabelsize=18,
-#                 title=latexstring("\$Z_0\$ boson mass peak"),
-#                 titlesize=20)
-#     errorbars!(ax, h, color=:black, whiskerwidth=6, label = "Candidate events")
-#     band!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, alpha=0.2, label="Gaussian fit (1σ Err x10)")
-#     lines!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, linewidth=2, label="Gaussian fit (1σ Err x10)")
-#     band!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, alpha=0.2, label="Breit-Wigner fit (1σ Err x10)")
-#     lines!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, linewidth=2, label="Breit-Wigner fit (1σ Err x10)")
-#     axislegend(ax; position = :rt, merge=true, unique=true)
-#     fig
-# end

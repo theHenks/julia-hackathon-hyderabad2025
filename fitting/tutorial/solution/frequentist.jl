@@ -1,3 +1,8 @@
+#################################################################
+# Proposed partial solution for frequentist fit in tutorial part 
+#################################################################
+
+
 using UnROOT
 using FHist, StatsBase, Distributions, IntervalSets, LinearAlgebra
 using Optimization, OptimizationLBFGSB, OptimizationOptimJL, QuadGK, ForwardDiff
