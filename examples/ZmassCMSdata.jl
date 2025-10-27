@@ -7,6 +7,9 @@ using CairoMakie
 # Alternatively, use a local file path:
 file = "/data/cms/0E3D51CB-3B75-974F-B868-0E2ABA272073.root"
 
+# Dataset documentation:
+# https://cms-nanoaod-integration.web.cern.ch/autoDoc/NanoAODv9/2016ULpostVFP/doc_SingleMuon_Run2016H-UL2016_MiniAODv2_NanoAODv9-v1.html
+
 # Open the ROOT file and access the Events tree selecting all branches matching "Muon.*"
 tfile = ROOTFile(file)         
 events = LazyTree(tfile, "Events",  Regex("Muon.*"));
