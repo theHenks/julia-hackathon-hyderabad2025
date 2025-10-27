@@ -65,8 +65,7 @@ loglike_init_gaussian = logdensityof(f_loglike(gaussian; fit_range=fit_range), m
 # MCMC gaussian
 posterior = PosteriorMeasure(f_loglike(gaussian), v_prior_gaussian)
 
-ENV["JULIA_DEBUG"] = "Main"
-samples = bat_sample(posterior, TransformedMCMC(proposal = RandomWalk(), nsteps = 10^5, nchains = 8, convergence=BrooksGelmanConvergence(threshold=10.0)))
+samples = bat_sample(posterior, TransformedMCMC(proposal = RandomWalk(), nsteps = 10^5, nchains = 4))
 
 # fit range and start values for Breit-Wigner
 v_prior_bw = distprod(N = Normal(sum(h.bincounts), sqrt(sum(h.bincounts))), M = Normal(90.0, 5.0), Γ = Weibull(2.0, 5.0))
@@ -75,23 +74,36 @@ loglike_init_bw = logdensityof(f_loglike(relativistic_breit_wigner; fit_range=fi
 
 # MCMC Breit-Wigner
 posterior_bw = PosteriorMeasure(f_loglike(relativistic_breit_wigner), v_prior_bw)
-samples_bw = bat_sample(posterior_bw, TransformedMCMC(proposal = RandomWalk(), nsteps = 10^5, nchains = 8))
+samples_bw = bat_sample(posterior_bw, TransformedMCMC(proposal = RandomWalk(), nsteps = 10^5, nchains = 4)).result
 
-let x_fit = first(fit_range):0.01:last(fit_range)
-    fig = Figure(size=(600, 400))
-    ax = Axis(fig[1, 1]; 
-                limits=((first(h.binedges[1]), last(h.binedges[1])), (-100, maximum(h.bincounts)*1.3)),
-                xlabel=L"m_{Z} \; (\mathrm{GeV}/c^{2})", 
-                ylabel=latexstring("Events / $bin_width \$\\mathrm{GeV}/c^{2}\$"),
-                ylabelsize=18,
-                xlabelsize=18,
-                title=latexstring("\$Z_0\$ boson mass peak"),
-                titlesize=20)
-    errorbars!(ax, h, color=:black, whiskerwidth=6, label = "Candidate events")
-    band!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, alpha=0.2, label="Gaussian fit (1σ Err x10)")
-    lines!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, linewidth=2, label="Gaussian fit (1σ Err x10)")
-    band!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, alpha=0.2, label="Breit-Wigner fit (1σ Err x10)")
-    lines!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, linewidth=2, label="Breit-Wigner fit (1σ Err x10)")
-    axislegend(ax; position = :rt, merge=true, unique=true)
-    fig
-end
+
+@info "Mode: $(mode(samples_bw))"
+@info "Mean: $(mean(samples_bw))"
+@info "Stddev: $(std(samples_bw))"
+
+unshaped_samples_bw, f_flatten_bw = bat_transform(Vector, samples_bw)
+
+par_cov_bw = cov(unshaped_samples_bw)
+@info "Covariance: $par_cov_bw"
+
+using LazyReports
+lazyreport(samples_bw)
+
+# let x_fit = first(fit_range):0.01:last(fit_range)
+#     fig = Figure(size=(600, 400))
+#     ax = Axis(fig[1, 1]; 
+#                 limits=((first(h.binedges[1]), last(h.binedges[1])), (-100, maximum(h.bincounts)*1.3)),
+#                 xlabel=L"m_{Z} \; (\mathrm{GeV}/c^{2})", 
+#                 ylabel=latexstring("Events / $bin_width \$\\mathrm{GeV}/c^{2}\$"),
+#                 ylabelsize=18,
+#                 xlabelsize=18,
+#                 title=latexstring("\$Z_0\$ boson mass peak"),
+#                 titlesize=20)
+#     errorbars!(ax, h, color=:black, whiskerwidth=6, label = "Candidate events")
+#     band!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, alpha=0.2, label="Gaussian fit (1σ Err x10)")
+#     lines!(ax, x_fit, x -> gaussian(x, v_best_gaussian_errx10...)*bin_width; color=:orange, linewidth=2, label="Gaussian fit (1σ Err x10)")
+#     band!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, alpha=0.2, label="Breit-Wigner fit (1σ Err x10)")
+#     lines!(ax, x_fit, x -> relativistic_breit_wigner(x, v_best_bw_errx10...)*bin_width; color=:darkblue, linewidth=2, label="Breit-Wigner fit (1σ Err x10)")
+#     axislegend(ax; position = :rt, merge=true, unique=true)
+#     fig
+# end

@@ -85,11 +85,11 @@ cov_bw = inv(hessian_bw)
 v_best_bw = v_shape_bw(measurement.(res_bw.u, sqrt.(diag(cov_bw))))
 v_best_bw_errx10 = v_shape_bw(measurement.(res_bw.u, sqrt.(diag(cov_bw))*10))
 
-let x_fit = first(fit_range):0.01:last(fit_range)
+fig = let x_fit = first(fit_range):0.01:last(fit_range)
     fig = Figure(size=(600, 400))
     ax = Axis(fig[1, 1]; 
                 limits=((first(h.binedges[1]), last(h.binedges[1])), (-100, maximum(h.bincounts)*1.3)),
-                xlabel=L"m_{Z} \; (\mathrm{GeV}/c^{2})", 
+                xlabel=L"m_{inv} \; (\mathrm{GeV}/c^{2})", 
                 ylabel=latexstring("Events / $bin_width \$\\mathrm{GeV}/c^{2}\$"),
                 ylabelsize=18,
                 xlabelsize=18,
@@ -103,3 +103,4 @@ let x_fit = first(fit_range):0.01:last(fit_range)
     axislegend(ax; position = :rt, merge=true, unique=true)
     fig
 end
+save("figures/Zboson_frequentist_fits.png", fig)
