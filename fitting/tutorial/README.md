@@ -55,4 +55,19 @@ Fit the histogram of the invariant mass of reconstructed Z boson candidates with
 Evaluate the goodness of fit for each model and fitting approach. You can use any statistical test of your choice, e.g. 
 - (Posterior predictiv) p-value
 - Reduced $\Chi^2$
-Compare the goodness of fit results for each model and fitting approach. Which model and approach provides the best fit to the data? Justify your answer based on the goodness of fit results. 
+Compare the goodness of fit results for each model and fitting approach. Which model and approach provides the best fit to the data? Justify your answer based on the goodness of fit results.
+
+
+## Advanced exercise - Background modelling
+Repeat the fitting procedure for a *CMS* dataset containing `SingleMuon` data 2016. The datafile is located under `/data/cms/` while a dteailed description can be found [here](https://cms-nanoaod-integration.web.cern.ch/autoDoc/NanoAODv9/2016ULpostVFP/doc_SingleMuon_Run2016H-UL2016_MiniAODv2_NanoAODv9-v1.html) and [here](https://opendata.cern.ch/record/30563).
+### Event Selection
+Before you can perform any fit, you have to select candidate events using the build in julia tools. To select reconstructed events, you can use [LorentzVectorHEP.jl](https://github.com/JuliaHEP/LorentzVectorHEP.jl). 
+For dimuon candidates, you can e.g. select by:
+- Exactly two muons
+- Muons opposite signs
+- $p_T > 10\mathrm{GeV}$
+- $60\mathrm{GeV} < m_{inv} < 120\mathrm{GeV}$
+
+To perform the selection, you should loop through all events and saving only candidate $m_{inv}$. You can speed up the selection process by applying multithreading in julia doing multiple selections in parallel using e.g. [OhMyThreads](https://juliafolds2.github.io/OhMyThreads.jl/stable/). 
+
+Plot the dimuon candidate mass spectrum as a histogram. Follow the steps for the MLE as described above while inlcuding an exponential background in your fit. Compare the results with your previous analysis. 
