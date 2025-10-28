@@ -8,23 +8,23 @@ You will be studying a sample that resembles the Z boson mass peak using [CMS da
 To fit a generator-level Z peak a Breit-Wigner fit makes sense. However, reconstructed-level Z peaks have many detector resolutions that smear the Z mass peak. If the detector resolution is relatively poor, then it is usually good enough to fit a gaussian (since the gaussian detector resolution will overwhelm the inherent Breit-Wigner shape of the peak). If the detector resolution is fairly good, then another option is to fit a Breit-Wigner (for the inherent shape) convoluted with a gaussian (to describe the detector effects).This is in the "no-background" case. If you have backgrounds in your sample (Drell-Yan, cosmics, etc...), and you want to do the fit over a large mass range, then another function needs to be included to take care of this - an exponential is commonly used (cf. adavanced tutorial).
 In this tutorial, we want to fit the data with 3 different models using our own likehood implementations:
 1. [Gaussian](https://en.wikipedia.org/wiki/Normal_distribution):
-$
+$$
     G(x ; \mu, \sigma)=\frac{1}{\sqrt{2 \pi} \sigma} \exp \left[-\frac{(x-\mu)^2}{2 \sigma^2}\right]
-$
+$$
 2. [Relativistic Breit-Wigner](https://en.wikipedia.org/wiki/Relativistic_Breit%E2%80%93Wigner_distribution):
-$
+$$
     B(m; M, \Gamma)=\frac{k}{\left(E^2-M^2\right)^2+M^2 \Gamma^2}
-$
+$$
 
 where $k$ is defined as
-$
+$$
     k=\frac{2 \sqrt{2} M \Gamma \gamma}{\pi \sqrt{M^2+\gamma}}, \quad \gamma=\sqrt{M^2\left(M^2+\Gamma^2\right)}
-$
+$$
 
 3. [Breit-Wigner convoluted with a Gaussian](https://en.wikipedia.org/wiki/Voigt_profile):
-$
+$$
 P(m)=\int B\left(m^{\prime} ; M, \Gamma\right) \cdot G\left(m-m^{\prime} ; \mu, \sigma\right) d m^{\prime}
-$
+$$
 
 ## Exercise 1 - Loading the data
 
